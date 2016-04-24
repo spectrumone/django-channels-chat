@@ -7,6 +7,11 @@ from django.shortcuts import render
 
 # Create your views here.
 def about(request):
+    if request.user.is_authenticated():
+        profile = request.user.profile
+        rooms = profile.messages.
+        print rooms
+
     return render(request, "chat/about.html")
 
 
@@ -37,6 +42,9 @@ def chat_room(request, label):
 
     # We want to show the last 50 messages, ordered most-recent-last
     messages = reversed(room.messages.order_by('-timestamp')[:50])
+
+    if not request.user.is_authenticated():
+        return redirect('about')
 
     return render(request, "chat/room.html", {
         'room': room,

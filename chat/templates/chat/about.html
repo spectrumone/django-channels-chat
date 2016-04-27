@@ -17,6 +17,9 @@
 
   {% if user.is_authenticated %}  
   <div class="row">
+      {% for room in rooms %}
+        <p>{{ room.name }}</p>
+      {% endfor %}
     <p>
       <a class="button button-primary" href="{% url 'new_room' %}">Create new chat room</a>
     </p>

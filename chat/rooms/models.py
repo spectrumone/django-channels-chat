@@ -39,7 +39,7 @@ class Message(models.Model):
     timestamp = models.DateTimeField(default=timezone.now, db_index=True)
 
     def __unicode__(self):
-        return "[{timestamp}] {owner}: {message}".format(**self.as_dict())
+        return "[{timestamp}]: {message}".format(**self.as_dict())
 
     @property
     def formatted_timestamp(self):

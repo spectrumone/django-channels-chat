@@ -2,7 +2,7 @@ import json
 
 from channels import Group
 from channels.sessions import channel_session
-from rooms.models import Room, Profile
+from rooms.models import Room, Profile, Message
 
 @channel_session
 def ws_connect(message):
@@ -47,9 +47,9 @@ def ws_receive(message):
     if data:
         print 'chat message room={0} message={1} owner={2}'.format(room.label, data['message'], data['owner'])
         profile = Profile.objects.get(pk=data['owner'])
-        m = room.messages.create(message=data['message'],
-                                 owner=profile)
-
+        m = Message.objects.create(message=data['message'],
+                                   owner=profile,
+                                   room=room)
         Group('chat-' + label, channel_layer=message.channel_layer).send({'text': json.dumps(m.as_dict())})
 
 

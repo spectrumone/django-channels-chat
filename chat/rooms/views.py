@@ -1,7 +1,7 @@
 from django.db import transaction
 from django.shortcuts import render, redirect
 import haikunator
-from .models import Room
+from .models import Room, Message
 
 from django.shortcuts import render
 
@@ -9,10 +9,10 @@ from django.shortcuts import render
 def about(request):
     if request.user.is_authenticated():
         profile = request.user.profile
-        rooms = profile.messages.
-        print rooms
+        messages = Message.objects.filter(owner=profile)
+        rooms = Room.objects.filter(pk__in=messages.values('pk')).distinct()
 
-    return render(request, "chat/about.html")
+    return render(request, "chat/about.html", {'rooms': rooms})
 
 
 def new_room(request):
@@ -25,7 +25,7 @@ def new_room(request):
             label = haikunator.haikunate()
             if Room.objects.filter(label=label).exists():
                 continue
-            new_room = Room.objects.create(label=label)
+            new_room = Room.objects.create(label=label){}
 
     return redirect(chat_room, label=label)
 
